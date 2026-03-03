@@ -85,6 +85,26 @@ and avatar in the worker dashboard leaderboards.
 
 This does not give Minerva, this script, or anyone else access to your account, or any permissions.
 
+## Docker
+This section is for advanced users and requires some pre-existing familiarity with docker. The guide assumes docker is running in a unix environment.
+
+### 1. Clone the repository
+Clone the repository to somewhere on your device
+
+### 2. Obtain a token
+Obtain a token using this url: [`https://api.minerva-archive.org/auth/discord/login?worker_callback=http://127.0.0.1:19283/`](https://api.minerva-archive.org/auth/discord/login?worker_callback=http://127.0.0.1:19283/). It will ask for a connection to your discord account for authentication. This will only verify your account and will not store your discord token anywhere (it doesn't even have access to your discord token).
+
+This will redirect to localhost and provide you with the token in the address bar. For example `http://127.0.0.1:19283/?token=1234`, where `1234` is your token.
+
+Then place your token in a file in your home directory at `~/minerva/token`.
+
+```bash
+echo -n "<token>" > ~/minerva/token
+```
+
+### Start the container
+Bring up the container with `docker compose up -d` from the root of the repository. This will build the package from source, start the worker, and then read the token from the bind-mounted volume `~/minerva`
+
 ## Development
 
 1. Install [uv]
