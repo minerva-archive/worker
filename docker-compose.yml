@@ -1,0 +1,22 @@
+services:
+  archive:
+    build:
+      context: .
+    # change your worker settings here:
+    command: ["uv", "run", "minerva", "run"]
+    environment:
+      # extra settings you can change, see ./minerva/constants.py
+      MINERVA_SERVER: "https://api.minerva-archive.org"
+      MINERVA_UPLOAD_SERVER: "https://gate.minerva-archive.org"
+      MINERVA_TOKEN_FILE: "~/.minerva-dpn/token"
+      MINERVA_TEMP_DIR: "/tmp/.minerva-dpn"
+      MINERVA_MAX_RETRIES: 3
+      MINERVA_RETRY_DELAY: 5
+      MINERVA_ARIA2C_SIZE_THRESHOLD: 1048576
+      MINERVA_QUEUE_PREFETCH: 2
+      MINERVA_HISTORY_LINES: 5
+    volumes:
+      - ${HOME}/.minerva-dpn/:/root/.minerva-dpn
+
+volumes:
+  data:

@@ -85,6 +85,43 @@ and avatar in the worker dashboard leaderboards.
 
 This does not give Minerva, this script, or anyone else access to your account, or any permissions.
 
+## Docker
+
+You can run the Minerva Worker inside a headless Docker container.
+The following steps assume some knowledge on git/docker.
+
+To change the settings of the worker, edit the the command section of the docker-compose file.
+For example, to request 20 jobs at a time, with 10 concurrent downloads, change it to:
+`command: ["uv", "run", "minerva", "run", "-c", "10", "-b", "20"]`
+
+### 1. Download a copy of the repository
+
+- Clone the Git Repository: `git clone https://github.com/rlaphoenix/minerva`  
+- Enter it: `cd minerva`
+
+### 2. Get an Authorization Token
+
+There's two ways to go about this,
+
+- either run the normal python script to authenticate with it,
+- or, get and save the token to a specific location manually.
+
+To get the token manually, go to <https://api.minerva-archive.org/auth/discord/login> and you will get a
+token value once you authorize with Discord. Copy that token value and save it to `~/.minerva-dpn/token`
+on Linux/macOS, or save it to `%USERPROFILE%/.minerva-dpn/token` on Windows.
+
+The token file must stay there at all times for the Docker container to have it. The location where the
+token needs to be can be changed, just make sure you change the volume location and environment variable
+in the docker-compose config.
+
+### 3. Start the container
+
+Build the Docker image and start the container with `docker compose up -d` to run it in the background.
+You can later stop the container with `docker compose down`.
+
+> [!TIP]
+If you prefer to run it in the foreground (attached to your terminal), simply use `docker compose up`.
+
 ## Development
 
 1. Install [uv]
