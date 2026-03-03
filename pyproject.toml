@@ -16,9 +16,7 @@ classifiers = [
     "Development Status :: 1 - Planning",
     "Intended Audience :: End Users/Desktop",
     "Natural Language :: English",
-    "Operating System :: Microsoft :: Windows",
-    "Operating System :: Microsoft :: Windows :: Windows 10",
-    "Operating System :: Microsoft :: Windows :: Windows 11",
+    "Operating System :: OS Independent",
     "Topic :: Games/Entertainment",
     "Topic :: Utilities",
 ]
@@ -42,7 +40,6 @@ Discussions = "https://github.com/rlaphoenix/minerva/discussions"
 Changelog = "https://github.com/rlaphoenix/minerva/blob/master/CHANGELOG.md"
 
 [dependency-groups]
-pack = ["pyinstaller~=6.18.0"]
 lint = ["ruff~=0.14.13", "pre-commit~=4.3.0"]
 form = ["ruff~=0.14.13", "isort~=6.1.0"]
 

@@ -30,10 +30,15 @@ class WorkerDisplay:
         with self._lock:
             self.active[file_id] = dict(label=label, status="DL", size=0, done=0)
 
-    def job_update(self, file_id: int, status: str, size: int = 0, done: int = 0) -> None:
+    def job_update(self, file_id: int, status: str, size: int | None = None, done: int | None = None) -> None:
         with self._lock:
             if file_id in self.active:
-                self.active[file_id].update(status=status, size=size, done=done)
+                entry = self.active[file_id]
+                entry["status"] = status
+                if size is not None:
+                    entry["size"] = size
+                if done is not None:
+                    entry["done"] = done
 
     def job_done(self, file_id: int, label: str, ok: bool, note: str = "") -> None:
         with self._lock:
@@ -68,7 +73,7 @@ class WorkerDisplay:
             done = info["done"]
 
             if size:
-                pct = done / size
+                pct = min(1.0, done / size)
                 bar_w = 14
                 filled = int(bar_w * pct)
                 bar = (

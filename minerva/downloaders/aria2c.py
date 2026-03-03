@@ -85,7 +85,7 @@ class Aria2c(Downloader):
             return {
                 "filename": filename,
                 "total_length": total_length,
-                "downloaded_length": downloaded_chunks * piece_length,
+                "downloaded_length": min(downloaded_chunks * piece_length, total_length),
                 "total_chunks": bitfield_length * 8,
                 "downloaded_chunks": downloaded_chunks,
             }

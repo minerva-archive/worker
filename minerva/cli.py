@@ -18,6 +18,7 @@ import click
 
 from minerva import __version__
 from minerva.auth import do_login, load_token
+from minerva.constants import TOKEN_FILE
 from minerva.console import console
 from minerva.constants import SERVER_URL, TEMP_DIR, UPLOAD_SERVER_URL
 from minerva.loop import worker_loop
@@ -46,6 +47,16 @@ def status() -> None:
     """Show login status."""
     token = load_token()
     console.print("[green]Logged in" if token else "[red]Not logged in")
+
+
+@main.command()
+def logout() -> None:
+    """Remove stored authentication token."""
+    if TOKEN_FILE.exists():
+        TOKEN_FILE.unlink()
+        console.print("[green]Logged out.")
+    else:
+        console.print("[dim]Not logged in.")
 
 
 @main.command()

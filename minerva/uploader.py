@@ -79,6 +79,7 @@ async def upload_file(
 
         # 3. Finish
         expected_sha256 = hasher.hexdigest()
+        result: dict = {}
         for attempt in range(1, UPLOAD_FINISH_RETRIES + 1):
             try:
                 resp = await client.post(

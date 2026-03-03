@@ -48,8 +48,8 @@ async def process_job(
     file_size: int | None = None
     uploaded: bool = False
 
-    # get local file path, mirroring URL path to avoid collisions, and sanitize for NTFS
-    # decodes percent-encoded characters, removes invalid characters for Windows paths
+    # get local file path, mirroring URL path to avoid collisions
+    # decodes percent-encoded characters, removes invalid path characters
     try:
         parsed_url = urllib.parse.urlparse(url)
         url_path = urllib.parse.unquote(parsed_url.path).lstrip("/")
@@ -87,7 +87,6 @@ async def process_job(
                 path=local_path,
                 on_progress=lambda done, size: display.job_update(file_id=file_id, status="UL", size=size, done=done),
             )
-            await report_job(server_url, token, file_id, "completed", bytes_downloaded=file_size)
             uploaded = True
             break
         except Exception as e:

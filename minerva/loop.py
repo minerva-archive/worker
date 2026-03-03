@@ -1,4 +1,5 @@
 import asyncio
+import signal
 from pathlib import Path
 from random import random
 
@@ -117,15 +118,27 @@ async def worker_loop(
                 seen_ids.discard(job["file_id"])
                 queue.task_done()
 
+    def _request_shutdown() -> None:
+        if not stop_event.is_set():
+            console.print("\n[yellow]Shutting down…")
+            stop_event.set()
+
+    loop = asyncio.get_event_loop()
+    for sig in (signal.SIGINT, signal.SIGTERM):
+        try:
+            loop.add_signal_handler(sig, _request_shutdown)
+        except (NotImplementedError, ValueError):
+            # Windows does not support add_signal_handler; fall back to default behaviour
+            pass
+
     with Live(display, console=console, refresh_per_second=4, screen=False):
         workers = [asyncio.create_task(worker()) for _ in range(concurrency)]
         producer_task = asyncio.create_task(producer())
         try:
             await asyncio.gather(producer_task, *workers)
-        except KeyboardInterrupt:
-            console.print("\n[yellow]Shutting down…")
-            stop_event.set()
+        except (KeyboardInterrupt, asyncio.CancelledError):
+            _request_shutdown()
             producer_task.cancel()
             for t in workers:
                 t.cancel()
-            return
+            await asyncio.gather(producer_task, *workers, return_exceptions=True)

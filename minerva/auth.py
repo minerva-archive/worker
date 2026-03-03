@@ -1,4 +1,5 @@
 import http.server
+import time
 import threading
 import urllib.parse
 import webbrowser
@@ -51,15 +52,21 @@ def do_login(server_url: str) -> str:
         def log_message(self, *_: Any) -> None:
             pass
 
+    LOGIN_TIMEOUT = 300  # 5 minutes total
+
     srv = http.server.HTTPServer(("127.0.0.1", 19283), Handler)
-    srv.timeout = 120
+    srv.timeout = 5  # poll interval so we can check overall deadline
 
     url = f"{server_url}/auth/discord/login?worker_callback=http://127.0.0.1:19283/"
     console.print("[bold]Opening browser for Discord login...")
     console.print(f"[dim]If it doesn't open: {url}")
     webbrowser.open(url)
 
+    deadline = time.monotonic() + LOGIN_TIMEOUT
     while not event.is_set():
+        if time.monotonic() >= deadline:
+            srv.server_close()
+            raise RuntimeError("Login timed out (5 minutes). Run 'minerva login' to try again.")
         srv.handle_request()
     srv.server_close()
 
