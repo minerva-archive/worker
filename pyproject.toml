@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "minerva-worker"
 version = "1.2.4"
-description = "Minerva DPN Worker, for more information see https://minerva-worker.org"
+description = "Minerva DPN Worker, for more information see https://minerva-archive.org"
 authors = [{ email = "17136956+rlaphoenix@users.noreply.github.com" }]
 requires-python = ">=3.12"
 readme = "README.md"
@@ -35,7 +35,7 @@ dependencies = [
 packages = ["minerva"]
 
 [project.urls]
-Website = "https://minerva-worker.org"
+Website = "https://minerva-archive.org"
 Repository = "https://github.com/rlaphoenix/minerva"
 Issues = "https://github.com/rlaphoenix/minerva/issues"
 Discussions = "https://github.com/rlaphoenix/minerva/discussions"
