@@ -29,6 +29,7 @@ from minerva.constants import (
     TEMP_DIR,
     UPLOAD_SERVER_URL,
 )
+from minerva.doctor import doctor_cmd
 from minerva.loop import worker_loop
 from minerva.version_check import check_for_update
 
@@ -107,6 +108,8 @@ def run(
         )
     )
 
+
+main.add_command(doctor_cmd)
 
 if __name__ == "__main__":
     main()
