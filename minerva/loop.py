@@ -34,15 +34,18 @@ async def worker_loop(
 ) -> None:
     token_dec = jwt.decode(token, options={"verify_signature": False})
 
-    console.print(f"Username:      {token_dec.get('username', '-')}")
-    console.print(f"Job Gateway:   {server_url}")
-    console.print(f"Upload Server: {upload_server_url}")
-    console.print(f"Concurrency:   {concurrency}")
-    console.print(f"Retries:       {MAX_RETRIES}")
-    console.print(f"Keep files:    {'yes' if keep_files else 'no'}")
-    console.print(f"Min job size:  {naturalsize(parse_size(min_job_size)) if min_job_size else 'N/A'}")
-    console.print(f"Max job size:  {naturalsize(parse_size(max_job_size)) if max_job_size else 'N/A'}")
-    console.print(f"Downloader:    {f'aria2c ({aria2c_connections} conns/job)' if ARIA2C else 'httpx'}")
+    console.print(f"Username:       {token_dec.get('username', '-')}")
+    console.print(f"Server:         {server_url}")
+    console.print(f"Upload Server:  {upload_server_url}")
+    console.print(f"Temp Directory: {temp_dir}")
+    console.print(f"Concurrency:    {concurrency}")
+    console.print(f"Batch Size:     {batch_size}")
+    console.print(f"Connections:    {aria2c_connections}")
+    console.print(f"Retries:        {MAX_RETRIES}")
+    console.print(f"Downloader:     {'aria2c' if ARIA2C else 'httpx'}")
+    console.print(f"Min job size:   {naturalsize(parse_size(min_job_size)) if min_job_size else 'N/A'}")
+    console.print(f"Max job size:   {naturalsize(parse_size(max_job_size)) if max_job_size else 'N/A'}")
+    console.print(f"Keep files:     {'yes' if keep_files else 'no'}")
     console.print()
 
     if not ARIA2C:
