@@ -6,7 +6,8 @@ build-backend = "hatchling.build"
 name = "minerva-worker"
 version = "1.3.3"
 description = "Minerva DPN Worker, for more information see https://minerva-archive.org"
-authors = [{ email = "17136956+rlaphoenix@users.noreply.github.com" }]
+authors = [{ email = "minervaarchive@proton.me" }]
+maintainers = [{ email = "17136956+rlaphoenix@users.noreply.github.com" }]
 requires-python = ">=3.10"
 readme = "README.md"
 license = "CC0-1.0"
@@ -38,10 +39,10 @@ packages = ["minerva"]
 
 [project.urls]
 Website = "https://minerva-archive.org"
-Repository = "https://github.com/rlaphoenix/minerva"
-Issues = "https://github.com/rlaphoenix/minerva/issues"
-Discussions = "https://github.com/rlaphoenix/minerva/discussions"
-Changelog = "https://github.com/rlaphoenix/minerva/blob/master/CHANGELOG.md"
+Repository = "https://github.com/minerva-archive/worker"
+Issues = "https://github.com/minerva-archive/worker/issues"
+Discussions = "https://github.com/minerva-archive/worker/discussions"
+Changelog = "https://github.com/minerva-archive/worker/blob/master/CHANGELOG.md"
 
 [dependency-groups]
 pack = ["pyinstaller~=6.18.0"]
