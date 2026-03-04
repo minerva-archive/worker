@@ -7,7 +7,6 @@ from urllib.parse import unquote, urlparse
 
 import httpx
 import jwt
-import readchar
 from humanfriendly import parse_size
 from humanize import naturalsize
 from rich.live import Live
@@ -24,6 +23,8 @@ _STOP = object()
 
 
 async def input_loop(display: WorkerDisplay) -> None:
+    import readchar
+
     while True:
         key = await asyncio.to_thread(readchar.readkey)
 
