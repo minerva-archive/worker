@@ -9,7 +9,7 @@
     <img src="https://img.shields.io/:license-CC%201.0-blue.svg" alt="License">
   </a>
   <a href="https://pypi.org/project/minerva">
-    <img src="https://img.shields.io/badge/python-3.12%2B-informational" alt="Python version">
+    <img src="https://img.shields.io/badge/python-3.10%2B-informational" alt="Python version">
   </a>
   <a href="https://github.com/astral-sh/uv">
     <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Onyx-Nostalgia/uv/refs/heads/fix/logo-badge/assets/badge/v0.json" alt="Manager: uv">

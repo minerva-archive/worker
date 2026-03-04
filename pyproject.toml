@@ -7,7 +7,7 @@ name = "minerva-worker"
 version = "1.2.6"
 description = "Minerva DPN Worker, for more information see https://minerva-archive.org"
 authors = [{ email = "17136956+rlaphoenix@users.noreply.github.com" }]
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 readme = "README.md"
 license = "CC0-1.0"
 license-files = ["LICENSE"]
