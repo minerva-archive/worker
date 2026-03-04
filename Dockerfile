@@ -41,9 +41,16 @@ RUN curl -Ls https://astral.sh/uv/install.sh | sh
 
 WORKDIR /app
 
+# Copy venv and app from builder
 COPY --from=builder /app/.venv /app/.venv
 COPY --from=builder /app /app
 
-ENV UV_VENV=/app/.venv
+# Copy the entrypoint wrapper
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
+# Use the wrapper as entrypoint
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
+# Default command
 CMD ["uv", "run", "minerva", "run"]
