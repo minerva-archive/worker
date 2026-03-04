@@ -133,6 +133,7 @@ You can later stop the container with `docker compose down`.
 If you prefer to run it in the foreground (attached to your terminal), simply use `docker compose up`.
 
 ### Terminal Interactivity
+
 These options allow you to interact with the container directly through the terminal.
 
 The configuration is controlled via the `stdin_open` and `tty` options in the [`docker-compose.yml`](./docker-compose.yml)
