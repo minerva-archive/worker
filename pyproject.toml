@@ -58,6 +58,7 @@ line-length = 120
 select = ["E4", "E7", "E9", "F", "W", "I"]
 
 [tool.mypy]
+python_version = "3.10"
 check_untyped_defs = true
 disallow_incomplete_defs = true
 disallow_untyped_defs = true
