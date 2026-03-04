@@ -17,7 +17,11 @@ from rich.text import Text
 from minerva.auth import load_token
 from minerva.constants import HISTORY_LINES
 
-console = Console()
+try:
+    tty = open("/dev/tty", "w")
+    console = Console(file=tty, force_terminal=True)
+except OSError:
+    console = Console()
 
 _SPINNER = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
 
