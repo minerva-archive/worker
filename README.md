@@ -90,9 +90,19 @@ This does not give Minerva, this script, or anyone else access to your account, 
 You can run the Minerva Worker inside a headless Docker container.
 The following steps assume some knowledge on git/docker.
 
-To change the settings of the worker, edit the the command section of the docker-compose file.
-For example, to request 20 jobs at a time, with 10 concurrent downloads, change it to:
-`command: ["uv", "run", "minerva", "run", "-c", "10", "-b", "20"]`
+To change the settings of the worker, you can set the following environment variables:
+
+- `--server`: `MINERVA_SERVER`
+- `--upload-server`: `MINERVA_UPLOAD_SERVER`
+- `-c/--concurrency`: `MINERVA_CONCURRENCY`
+- `-b/--batch-size`: `MINERVA_BATCH_SIZE`
+- `-a/--aria2c-connections`: `MINERVA_ARIA2C_CONNECTIONS`
+- `-p/--pre-allocation`: `MINERVA_ARIA2C_PRE_ALLOCATION`
+- `--temp-dir`: `MINERVA_TEMP_DIR`
+- `--keep-files`: `MINERVA_KEEP_FILES`
+
+There are more advanced environment variables available, you can find them listed in
+[constants.py](/minerva/constants.py).
 
 ### 1. Download a copy of the repository
 
