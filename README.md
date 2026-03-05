@@ -138,7 +138,7 @@ These options allow you to interact with the container directly through the term
 
 The configuration is controlled via the `stdin_open` and `tty` options in the [`docker-compose.yml`](./docker-compose.yml)
 
-```
+```yml
 stdin_open: true  # Keeps STDIN open even if not attached
 tty: true         # Allocates a pseudo-TTY for the container
 ```
@@ -147,9 +147,8 @@ If you do not need terminal interactivity, you can comment out or remove these l
 
 When these are enabled, you may prefer to use `docker attach <container_name>` instead of `docker logs <container_name>` to see real-time output without duplicated lines, and to provide input.
 
-**To safely detach from an attached container without stopping it, use the key sequence `CTRL + P` then `CTRL + Q`.**
-
-
+> [!TIP]
+To safely detach from an attached container without stopping it, use the key sequence `CTRL + P` then `CTRL + Q`.
 
 ## Development
 
