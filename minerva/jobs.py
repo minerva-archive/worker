@@ -117,6 +117,12 @@ async def process_job(
             break
         except Exception as e:
             last_err = e
+            if "409 Conflict" in str(last_err):
+                display.job_done(file_id, label, ok=False, note="Upload had a conflict, job skipped")
+                job_cache.remove(job)
+                if not keep_files:
+                    local_path.unlink(missing_ok=True)
+                return
             if attempt < ul_retries:
                 display.job_update(file_id, "RT", done=0, waiting=True)
                 await asyncio.sleep(RETRY_DELAY * attempt)

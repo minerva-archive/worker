@@ -6,11 +6,11 @@
 [Setup]
 AppId={#AppName}
 AppName={#AppName}
-AppPublisher=rlaphoenix
-AppPublisherURL=https://github.com/rlaphoenix/minerva
-AppReadmeFile=https://github.com/rlaphoenix/minerva/blob/master/README.md
-AppSupportURL=https://github.com/rlaphoenix/minerva/issues
-AppUpdatesURL=https://github.com/rlaphoenix/minerva/blob/master/CHANGELOG.md
+AppPublisher=minerva-archive
+AppPublisherURL=https://github.com/minerva-archive/worker
+AppReadmeFile=https://github.com/minerva-archive/worker/blob/master/README.md
+AppSupportURL=https://github.com/minerva-archive/worker/issues
+AppUpdatesURL=https://github.com/minerva-archive/worker/blob/master/CHANGELOG.md
 AppVerName={#AppName} {#Version}
 AppVersion={#Version}
 ArchitecturesAllowed=x64

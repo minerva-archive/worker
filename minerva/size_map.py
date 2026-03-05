@@ -1,6 +1,6 @@
 import zlib
 from pathlib import Path
-from typing import Self
+from typing import Any
 from urllib.parse import unquote
 
 _size_index = None
@@ -9,7 +9,7 @@ _size_index = None
 class SizeIndex:
     _instance = None
 
-    def __new__(cls, index_path: Path | None = None) -> Self:
+    def __new__(cls, index_path: Path | None = None) -> Any:
         if cls._instance is None:
             if index_path is None:
                 raise ValueError("First initialization requires index_path")

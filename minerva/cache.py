@@ -1,14 +1,14 @@
 import json
-from typing import Any, Self
+from typing import Any
 from urllib.parse import unquote
 
 from minerva.constants import CACHE_FILE
 
 
 class JobCache:
-    _instance: Self | None = None
+    _instance: Any | None = None
 
-    def __new__(cls) -> Self:
+    def __new__(cls) -> Any:
         if cls._instance is None:
             cls._instance = super().__new__(cls)
             cls._instance._init()

@@ -12,7 +12,7 @@ from minerva import __version__
 # -------------------------
 
 DEFAULT_NAME = "Minerva"
-DEFAULT_AUTHOR = "rlaphoenix"
+DEFAULT_AUTHOR = "minerva-archive"
 SPEC_FILE = Path(f"{DEFAULT_NAME}.spec")
 VERSION_FILE = Path("pyinstaller.version.txt")
 

@@ -35,6 +35,12 @@ async def input_loop(display: WorkerDisplay) -> None:
                 display._page -= 1
 
 
+async def update_rank_loop(display: WorkerDisplay) -> None:
+    while True:
+        display.update_rank()
+        await asyncio.sleep(20)
+
+
 async def worker_loop(
     server_url: str,
     upload_server_url: str,
@@ -162,34 +168,37 @@ async def worker_loop(
                     if jobs_added == 0:
                         await asyncio.sleep(0.5)
 
-                fetch_count = min(batch_size, free_slots - jobs_added)
-                try:
-                    resp = await api.get(
-                        f"{server_url}/api/jobs",
-                        params={"count": fetch_count},
-                        headers=auth_headers(token),
-                    )
-                    if resp.status_code == 426:
-                        _raise_if_upgrade_required(resp)
-                    if resp.status_code == 401:
-                        console.print("[red]Token expired. Run: minerva login")
-                        stop_event.set()
-                        break
-                    resp.raise_for_status()
-                    jobs = resp.json().get("jobs", [])
-                    if jobs:
-                        jobs_added = await queue_jobs(jobs)
-                        if jobs_added == 0:
-                            await asyncio.sleep(5)
-                    else:
-                        if not no_jobs_warned:
-                            console.print("[dim]Server has no jobs available, waiting 30s…")
-                            no_jobs_warned = True
-                        await asyncio.sleep(12 + random() * 8)
-                        continue
-                except httpx.HTTPError as e:
-                    console.print(f"[red]Server error: {e}. Retrying in 10s…")
-                    await asyncio.sleep(6 + random() * 4)
+                fetch_count = max(0, min(batch_size, free_slots - jobs_added))
+                if fetch_count > 0:
+                    try:
+                        resp = await api.get(
+                            f"{server_url}/api/jobs",
+                            params={"count": fetch_count},
+                            headers=auth_headers(token),
+                        )
+                        if resp.status_code == 426:
+                            _raise_if_upgrade_required(resp)
+                        if resp.status_code == 401:
+                            console.print("[red]Token expired. Run: minerva login")
+                            stop_event.set()
+                            break
+                        resp.raise_for_status()
+                        jobs = resp.json().get("jobs", [])
+                        if jobs:
+                            jobs_added = await queue_jobs(jobs)
+                            if jobs_added == 0:
+                                await asyncio.sleep(5)
+                        else:
+                            if not no_jobs_warned:
+                                console.print("[dim]Server has no jobs available, waiting 30s…")
+                                no_jobs_warned = True
+                            await asyncio.sleep(12 + random() * 8)
+                            continue
+                    except httpx.HTTPError as e:
+                        console.print(f"[red]Server error: {e}. Retrying in 10s…")
+                        await asyncio.sleep(6 + random() * 4)
+                else:
+                    await asyncio.sleep(2)
 
             no_jobs_warned = False
 
@@ -228,18 +237,28 @@ async def worker_loop(
                     seen_ids.discard(job["file_id"])
                 queue.task_done()
 
-    # If were in a headless non-tty environment this will be false.
-    if sys.stdin.isatty():
-        asyncio.create_task(input_loop(display))
+    is_tty = sys.stdin.isatty()
     with Live(display, console=console, refresh_per_second=4, screen=False):
         workers = [asyncio.create_task(worker()) for _ in range(concurrency)]
         producer_task = asyncio.create_task(producer())
+        update_rank_task = asyncio.create_task(update_rank_loop(display))
+        
+        input_loop_task = None
+        if is_tty:
+            input_loop_task = asyncio.create_task(input_loop(display))
+        
+        tasks = [producer_task, update_rank_task, *workers]
+        if input_loop_task:
+            tasks.append(input_loop_task)
         try:
-            await asyncio.gather(producer_task, *workers)
+            await asyncio.gather(*tasks)
         except KeyboardInterrupt:
             console.print("\n[yellow]Shutting down…")
             stop_event.set()
+            if input_loop_task:
+                input_loop_task.cancel()
             producer_task.cancel()
+            update_rank_task.cancel()
             for t in workers:
                 t.cancel()
             return

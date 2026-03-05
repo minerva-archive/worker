@@ -1,11 +1,11 @@
 <p align="center">
-  <a href="https://github.com/rlaphoenix/minerva">Minerva Worker</a>
+  <a href="https://github.com/minerva-archive/worker">Minerva Worker</a>
   <br/>
   <sup><em>Preserving Myrient's legacy, one file at a time.</em></sup>
 </p>
 
 <p align="center">
-  <a href="https://github.com/rlaphoenix/minerva/blob/master/LICENSE">
+  <a href="https://github.com/minerva-archive/worker/blob/master/LICENSE">
     <img src="https://img.shields.io/:license-CC%201.0-blue.svg" alt="License">
   </a>
   <a href="https://pypi.org/project/minerva">
@@ -17,8 +17,8 @@
   <a href="https://github.com/astral-sh/ruff">
     <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json" alt="Linter: Ruff">
   </a>
-  <a href="https://github.com/rlaphoenix/minerva/actions/workflows/ci.yml">
-    <img src="https://github.com/rlaphoenix/minerva/actions/workflows/ci.yml/badge.svg" alt="Build status">
+  <a href="https://github.com/minerva-archive/worker/actions/workflows/ci.yml">
+    <img src="https://github.com/minerva-archive/worker/actions/workflows/ci.yml/badge.svg" alt="Build status">
   </a>
 </p>
 
@@ -45,7 +45,7 @@ For configuration options, see help and options by running `minerva --help`.
 
 *Alternatively, a Windows EXE is available on the [Releases] page, simply run it to begin!*
 
-  [Releases]: <https://github.com/rlaphoenix/minerva/releases>
+  [Releases]: <https://github.com/minerva-archive/worker/releases>
 
 ## Usage
 
@@ -106,7 +106,7 @@ There are more advanced environment variables available, you can find them liste
 
 ### 1. Download a copy of the repository
 
-- Clone the Git Repository: `git clone https://github.com/rlaphoenix/minerva`  
+- Clone the Git Repository: `git clone https://github.com/minerva-archive/worker`  
 - Enter it: `cd minerva`
 
 ### 2. Get an Authorization Token
@@ -163,18 +163,6 @@ Now feel free to work on the project however you like, all code will be checked 
 
   [uv]: <https://docs.astral.sh/uv>
 
-## Credit
-
-- [bl791] for the original one-file script.
-- [Puyodead1] for their improved rich interface and speedups.
-- [rlaphoenix] for further improvements, bug fixes, support.
-- [wikipiti] for the aria2 control file parsing code.
-
-  [bl791]: <https://github.com/bl791>
-  [Puyodead1]: <https://github.com/Puyodead1>
-  [rlaphoenix]: <https://github.com/rlaphoenix>
-  [wikipiti]: <https://github.com/wikipiti>
-
 ## Licensing
 
 This software is licensed under the terms of [CC0 1.0 Universal](LICENSE).
@@ -182,11 +170,11 @@ You can find a copy of the license in the LICENSE file in the root folder
 
 This project uses the following software:
 
-- Aria2(c) licensed under GPL-v2, used for faster downloads: https://github.com/aria2/aria2
+- Aria2(c) licensed under GPL-v2, used for faster downloads: <https://github.com/aria2/aria2>
 
 No changes were made to any of the aforementioned software and copies of their licenses
 can be found next to their binaries within the bin folder.
 
 * * *
 
-© rlaphoenix 2026
+© minerva-archive 2026
