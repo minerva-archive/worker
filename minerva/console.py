@@ -33,6 +33,9 @@ class WorkerDisplay:
     """
 
     def __init__(self) -> None:
+        self._leaderboard_last_fetch = 0  # Only use in update_rank_loop (update_rank)
+
+        # All following variables are locked by _lock
         self.history: collections.deque = collections.deque(maxlen=HISTORY_LINES)
         self.active: dict[int, Any] = {}  # file_id -> dict
         self._lock = threading.Lock()
@@ -42,9 +45,7 @@ class WorkerDisplay:
         self._total_fails = 0
         self._total_bytes = 0
         self._username = None
-        self._leaderboard_lock = threading.Lock()
         self._leaderboard_cache: tuple[int | None, int | None] | tuple[None, None] = (None, None)
-        self._leaderboard_last_fetch = 0
 
     def job_start(self, job: dict[str, Any], label: str) -> None:
         now = time.monotonic()
@@ -119,19 +120,20 @@ class WorkerDisplay:
             total_bytes = self._total_bytes
             dl_speed = sum(self.effective_speed(x) for x in snapshot if x["status"] == "DL")
             ul_speed = sum(self.effective_speed(x) for x in snapshot if x["status"] == "UL")
-
-        with self._leaderboard_lock:
             rank, uploaded = self._leaderboard_cache
+            username = self._username
 
         h = int(elapsed_total // 3600)
         m = int((elapsed_total % 3600) // 60)
         s = int(elapsed_total % 60)
 
-        if not self._username:
+        if not username:
             token = load_token()
             if token:
                 token_dec = jwt.decode(token, options={"verify_signature": False})
-                self._username = token_dec.get("username", "")
+                username = token_dec.get("username", "")
+                with self._lock:
+                    self._username = username
 
         def get_size(speed: int | float | None) -> str:
             return humanize.naturalsize(speed or 0, binary=True, gnu=False, format="%.2f").replace(" Bytes", "b")
@@ -140,7 +142,7 @@ class WorkerDisplay:
         stats.add_column(justify="left")
         stats.add_column(justify="right")
         stats.add_row(
-            f"[cyan]{self._username} #{rank or '--'}[/cyan] [dim]({get_size(float(uploaded or 0))})[/dim] "
+            f"[cyan]{username} #{rank or '--'}[/cyan] [dim]({get_size(float(uploaded or 0))})[/dim] "
             + f"Uploads: [dim]{done_count} ({get_size(total_bytes)})[/dim] "
             + f"Failures: [dim]{fail_count}[/dim]",
             f"[green]⬇{get_size(dl_speed)}/s[/green] [blue]⬆{get_size(ul_speed)}/s[/blue] "
@@ -153,24 +155,29 @@ class WorkerDisplay:
         now = time.monotonic()
         personal_stats: tuple[int | None, int | None] | tuple[None, None] | None = None
 
-        with self._leaderboard_lock:
-            if self._username:
-                if now - self._leaderboard_last_fetch > 180 or self._leaderboard_cache is None:
-                    try:
-                        personal_stats = next(
-                            (
-                                (x.get("rank"), x.get("total_bytes"))
-                                for x in httpx.get(
-                                    "https://minerva-archive.org/api/leaderboard?limit=10000", timeout=30
-                                ).json()
-                                if x["discord_username"] == self._username
-                            ),
-                            (None, None),
-                        )
-                    except (JSONDecodeError, httpx.ConnectError):
-                        pass
-                    self._leaderboard_last_fetch = now
-            if personal_stats is not None:
+        with self._lock:
+            previous_leaderboard = self._leaderboard_cache
+            username = self._username
+
+        if username:
+            if now - self._leaderboard_last_fetch > 180 or previous_leaderboard is None:
+                try:
+                    personal_stats = next(
+                        (
+                            (x.get("rank"), x.get("total_bytes"))
+                            for x in httpx.get(
+                                "https://minerva-archive.org/api/leaderboard?limit=10000", timeout=30
+                            ).json()
+                            if x["discord_username"] == username
+                        ),
+                        (None, None),
+                    )
+                except (JSONDecodeError, httpx.ConnectError, httpx.ReadTimeout) as e:
+                    console.print(f"[yellow]Currently unable to refresh leaderboard rank: {e}.")
+                self._leaderboard_last_fetch = now
+
+        if personal_stats is not None:
+            with self._lock:
                 self._leaderboard_cache = personal_stats
 
     def __rich__(self) -> Group:
