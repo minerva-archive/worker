@@ -92,7 +92,7 @@ async def process_job(
                             uploaded=uploaded,
                             waiting=False,
                         )
-                        break
+                    break
             except websockets.exceptions.WebSocketException as e:
                 print(f"Websocket error while processing job {job.file_id}: {e}")
                 last_err = e
@@ -141,8 +141,8 @@ async def process_job(
                         job.file_id, label, ok=False, note=f"Job Failed ({retries} attempts): {str(last_err)}"
                     )
                     await report_job_failure(job, server, lock, job_response_futures, job_response_lock)
-
-    display.job_done(job.file_id, label, ok=True, note=humanize.naturalsize(chunk_size) if chunk_size else "")
+            finally:
+                display.job_done(job.file_id, label, ok=True, note=humanize.naturalsize(chunk_size) if chunk_size else "")
 
 
 async def report_job_failure(
