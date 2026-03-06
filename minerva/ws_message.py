@@ -2,6 +2,7 @@ import struct
 from dataclasses import dataclass, field
 from io import BytesIO
 from typing import Any
+from urllib.parse import quote, unquote
 
 
 def write_u8(buf: BytesIO, value: int) -> None:
@@ -184,6 +185,16 @@ class ChunkInfo:
     start: int
     end: int
 
+    @staticmethod
+    def normalize_url(url: str) -> str:
+        scheme, rest = url.split("://", 1)
+        host, path = rest.split("/", 1)
+
+        decoded = unquote(path)
+        encoded = quote(decoded, safe="/[]")
+
+        return f"{scheme}://{host}/{encoded}"
+
 
 @dataclass
 class JobState:
@@ -226,7 +237,7 @@ class ChunkResponseMessage(WSMessage):
         for _ in range(count):
             chunk_id = read_string(buf)
             file_id = read_string(buf)
-            url = read_string(buf)
+            url = ChunkInfo.normalize_url(read_string(buf))
             start = read_u64(buf)
             end = read_u64(buf)
             chunks.append(ChunkInfo(chunk_id, file_id, url, start, end))
