@@ -36,6 +36,8 @@ jobs:
         mv dist/Minerva.exe Minerva-${{ github.ref_name }}-portable.exe
     - name: Build project
       run: uv build
+    - name: Publish to PyPI
+      run: uv publish
     - name: Deploy release
       uses: marvinpinto/action-automatic-releases@latest
       with:
@@ -44,5 +46,3 @@ jobs:
         files: |
           Minerva-*.exe
           Minerva-*-portable.exe
-    - name: Publish to PyPI
-      run: uv publish
