@@ -7,7 +7,7 @@ from typing import Any
 from rich.console import Console
 
 from minerva import __version__
-from minerva.constants import IS_DOCKER, TOKEN_FILE
+from minerva.constants import AUTH_HOST, AUTH_PORT, IS_DOCKER, TOKEN_FILE
 
 
 def auth_headers(token: str) -> dict[str, str]:
@@ -52,12 +52,12 @@ def do_login(server_url: str) -> str:
         def log_message(self, *_: Any) -> None:
             pass
 
-    srv = http.server.HTTPServer(("127.0.0.1", 19283), Handler)
+    srv = http.server.HTTPServer((AUTH_HOST, AUTH_PORT), Handler)
     srv.timeout = 120
 
     console = Console()
 
-    url = f"{server_url}/auth/discord/login?worker_callback=http://127.0.0.1:19283/"
+    url = f"{server_url}/auth/discord/login?worker_callback=http://{AUTH_HOST}:{AUTH_PORT}/"
     console.print("[bold]Opening browser for Discord login...")
     console.print(f"[dim]If it doesn't open: {url}")
     webbrowser.open(url)

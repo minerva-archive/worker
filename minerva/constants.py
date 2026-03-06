@@ -16,6 +16,8 @@ UPLOAD_SERVER_URL = os.environ.get("MINERVA_UPLOAD_SERVER", "https://gate.minerv
 
 # auth
 TOKEN_FILE = Path(os.environ.get("MINERVA_TOKEN_FILE", Path.home() / ".minerva-dpn" / "token"))
+AUTH_HOST = os.environ.get("MINERVA_AUTH_HOST", "127.0.0.1")
+AUTH_PORT = int(os.environ.get("MINERVA_AUTH_PORT", 19283))
 
 # downloader
 CONCURRENCY = int(os.environ.get("MINERVA_CONCURRENCY", 2))

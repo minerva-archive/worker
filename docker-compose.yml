@@ -20,6 +20,8 @@ services:
       MINERVA_HISTORY_LINES: 5
       MINERVA_CONCURRENCY: 2
       MINERVA_BATCH_SIZE: 10
+      MINERVA_AUTH_HOST: "127.0.0.1"
+      MINERVA_AUTH_PORT: 19283
     volumes:
       - ${HOME}/.minerva-dpn/:/root/.minerva-dpn
 
