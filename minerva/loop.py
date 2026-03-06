@@ -149,11 +149,14 @@ async def worker_loop(
                         f"[red]Error: Unable to register with coordinator ({e}), retrying in {RETRY_DELAY}s...[/red]"
                     )
                     await asyncio.sleep(RETRY_DELAY)
+                    continue
                 if not worker_id:
                     console.print("[red]COULD NOT CONNECT TO COORDINATOR![/red]")
                     console.print("[red]Will try again in one minute...[/red]")
                     await asyncio.sleep(60)
+                    continue
                 console.print(f"[green]Connected to coordinator with ID: {worker_id}[/green]")
+                stop_event.clear()
 
                 async def queue_jobs(jobs: list[ChunkInfo]) -> int:
                     jobs_queued = 0
