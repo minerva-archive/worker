@@ -136,7 +136,9 @@ async def worker_loop(
                 try:
                     async with websocket_lock:
                         await websocket.send(
-                            RegisterMessage(version=SERVER_VERSION, max_concurrent=concurrency, access_token=token).encode()
+                            RegisterMessage(
+                                version=SERVER_VERSION, max_concurrent=concurrency, access_token=token
+                            ).encode()
                         )
                         response = decode_message(await websocket.recv())
                     if isinstance(response, ErrorResponseMessage):

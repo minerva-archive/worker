@@ -22,13 +22,15 @@ MYRIENT_SPEED_TEST_URL = "https://myrient.erista.me/files/No-Intro/VM%20Labs%20-
 
 # timeouts and retries
 CONNECTIVITY_CHECK_TIMEOUT = 5.0
-MAX_RETRIES = int(os.environ.get("MINERVA_MAX_RETRIES", 5))
+RETRIES = int(os.environ.get("MINERVA_RETRIES", 5))
 RETRY_DELAY = int(os.environ.get("MINERVA_RETRY_DELAY", 5))
 
 # sizes and counts
 CONCURRENCY = int(os.environ.get("MINERVA_CONCURRENCY", 2))
 MAX_CHUNK_COUNT = 300
 SUBCHUNK_SIZE = 996147  # DO NOT CHANGE OR YOUR SCRIPT WILL BREAK!
+MIN_JOB_SIZE = os.environ.get("MINERVA_MIN_JOB_SIZE", "")
+MAX_JOB_SIZE = os.environ.get("MINERVA_MAX_JOB_SIZE", "")
 
 # ui
 HISTORY_LINES = int(os.environ.get("MINERVA_HISTORY_LINES", 5))  # completed jobs shown above active table

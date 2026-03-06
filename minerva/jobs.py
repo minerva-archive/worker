@@ -94,7 +94,9 @@ async def process_job(
                             uploaded=uploaded,
                             waiting=False,
                         )
-                    display.job_done(job.file_id, label, ok=True, note=humanize.naturalsize(chunk_size) if chunk_size else "")
+                    display.job_done(
+                        job.file_id, label, ok=True, note=humanize.naturalsize(chunk_size) if chunk_size else ""
+                    )
                     break
             except websockets.exceptions.WebSocketException as e:
                 print(f"Websocket error while processing job {job.file_id}: {e}")

@@ -11,7 +11,9 @@ from minerva.auth import do_login, load_token
 from minerva.console import console
 from minerva.constants import (
     CONCURRENCY,
-    MAX_RETRIES,
+    MAX_JOB_SIZE,
+    MIN_JOB_SIZE,
+    RETRIES,
     SERVER_URL,
 )
 from minerva.doctor import doctor_cmd
@@ -47,9 +49,9 @@ def status() -> None:
 @click.pass_context
 @click.option("--server", default=SERVER_URL, help="Server URL")
 @click.option("-c", "--concurrency", default=CONCURRENCY, help="Concurrent jobs")
-@click.option("-r", "--retries", default=MAX_RETRIES, help="Max amount of attempts for each job")
-@click.option("--min-job-size", default="", help="Skip jobs for files smaller than a given size")
-@click.option("--max-job-size", default="", help="Skip jobs for files larger than a given size")
+@click.option("-r", "--retries", default=RETRIES, help="Max amount of attempts for each job")
+@click.option("--min-job-size", default=MIN_JOB_SIZE, help="Skip jobs for files smaller than a given size")
+@click.option("--max-job-size", default=MAX_JOB_SIZE, help="Skip jobs for files larger than a given size")
 def run(
     ctx: click.Context,
     server: str,
