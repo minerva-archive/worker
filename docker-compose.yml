@@ -1,7 +1,6 @@
 services:
   archive:
-    build:
-      context: .
+    image: ghcr.io/minerva-archive/worker:latest
     # Uncomment these if you want terminal interactivity. See the README for more info
     # stdin_open: true
     # tty: true
