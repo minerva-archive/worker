@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "minerva-worker"
-version = "1.3.4"
+version = "2.0.0"
 description = "Minerva DPN Worker, for more information see https://minerva-archive.org"
 authors = [{ email = "minervaarchive@proton.me" }]
 maintainers = [{ email = "17136956+rlaphoenix@users.noreply.github.com" }]

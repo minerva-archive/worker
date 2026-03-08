@@ -6,6 +6,7 @@ SERVER_URL = os.environ.get("MINERVA_SERVER", "https://firehose.minerva-archive.
 SERVER_VERSION: int = 4
 CALLBACK_ENDPOINT = "/code"
 WORKER_ENDPOINT = "/worker"
+LEADERBOARD_ENDPOINT = "/api/leaderboard"
 
 # vesioning and identity
 USER_AGENT = f"HyperscrapeWorker/v{SERVER_VERSION} (Created by Hackerdude for Minerva)"
