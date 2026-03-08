@@ -9,13 +9,16 @@ services:
     # change your worker settings here:
     command: ["uv", "run", "minerva", "run"]
     environment:
-      # extra settings you can change, see ./minerva/constants.py
-      MINERVA_SERVER: "https://firehose.minerva-archive.org"
-      MINERVA_TOKEN_FILE: "/root/.minerva-dpn/token"
-      MINERVA_RETRIES: 3
-      MINERVA_RETRY_DELAY: 5
-      MINERVA_HISTORY_LINES: 5
-      MINERVA_CONCURRENCY: 10
+      - MINERVA_SERVER
+      - MINERVA_TOKEN_FILE
+      - MINERVA_AUTH_HOST
+      - MINERVA_AUTH_PORT
+      - MINERVA_RETRIES
+      - MINERVA_RETRY_DELAY
+      - MINERVA_CONCURRENCY
+      - MINERVA_MIN_JOB_SIZE
+      - MINERVA_MAX_JOB_SIZE
+      - MINERVA_HISTORY_LINES
     volumes:
       - ${HOME}/.minerva-dpn/:/root/.minerva-dpn
     restart: unless-stopped
