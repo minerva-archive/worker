@@ -68,7 +68,7 @@ class WorkerDisplay:
     async def remove_jobs(self, worker_id: str) -> None:
         async with self._lock:
             self.active = {
-                file_id: (job, state) for file_id, (job, state) in self.active.items() if state.worker_id != worker_id
+                chunk_id: (job, state) for chunk_id, (job, state) in self.active.items() if state.worker_id != worker_id
             }
 
     async def job_start(self, job: ChunkInfo, label: str, worker_id: str) -> None:
@@ -89,11 +89,11 @@ class WorkerDisplay:
             upload_speed=0.0,
         )
         async with self._lock:
-            self.active[job.file_id] = (job, state)
+            self.active[job.chunk_id] = (job, state)
 
     async def job_update(
         self,
-        file_id: str,
+        chunk_id: str,
         status: str,
         size: int | None = None,
         downloaded: int | None = None,
@@ -103,9 +103,9 @@ class WorkerDisplay:
         try:
             now = time.monotonic()
             async with self._lock:
-                if file_id not in self.active:
+                if chunk_id not in self.active:
                     return
-                job, state = self.active[file_id]
+                job, state = self.active[chunk_id]
                 update_rates = False
                 dt = now - state.prev_time
                 if dt >= 0.5:
@@ -129,11 +129,11 @@ class WorkerDisplay:
                 if waiting is not None:
                     state.waiting = waiting
         except Exception:
-            self.log.exception("Error updating job state for file_id %s", file_id, exc_info=True)
+            self.log.exception("Error updating job state for chunk_id %s", chunk_id, exc_info=True)
 
-    async def job_done(self, file_id: str, label: str, ok: bool, note: str = "") -> None:
+    async def job_done(self, chunk_id: str, label: str, ok: bool, note: str = "") -> None:
         async with self._lock:
-            _, state = self.active.pop(file_id, (None, None))
+            _, state = self.active.pop(chunk_id, (None, None))
             if state:
                 state.waiting = False
             if ok:
@@ -412,7 +412,7 @@ class WorkerDisplay:
                     elapsed_str,
                 )
             except Exception:
-                self.log.exception("Error rendering job state for file_id %s", job.file_id, exc_info=True)
+                self.log.exception("Error rendering job state for chunk_id %s", job.chunk_id, exc_info=True)
 
         parts: list = []
 

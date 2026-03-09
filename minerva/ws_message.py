@@ -55,6 +55,7 @@ class WSMessageType:
     UPLOAD_SUBCHUNK = 1
     GET_CHUNKS = 2
     DETACH_CHUNK = 3
+    CORRECT_FILE_SIZE = 4
 
     REGISTER_RESPONSE = 128
     CHUNK_RESPONSE = 129
@@ -104,7 +105,6 @@ class RegisterMessage(WSMessage):
 @dataclass
 class UploadSubchunkMessage(WSMessage):
     chunk_id: str
-    file_id: str
     payload: bytes
 
     TYPE = WSMessageType.UPLOAD_SUBCHUNK
@@ -113,7 +113,6 @@ class UploadSubchunkMessage(WSMessage):
         buf = BytesIO()
         write_u8(buf, self.TYPE)
         write_string(buf, self.chunk_id)
-        write_string(buf, self.file_id)
         write_bytes(buf, self.payload)
         return buf.getvalue()
 
@@ -121,7 +120,6 @@ class UploadSubchunkMessage(WSMessage):
     def decode(cls, buf: BytesIO) -> "UploadSubchunkMessage":
         return cls(
             chunk_id=read_string(buf),
-            file_id=read_string(buf),
             payload=read_bytes(buf),
         )
 
@@ -161,6 +159,25 @@ class DetachChunkMessage(WSMessage):
 
 
 @dataclass
+class CorrectFileSizeMessage(WSMessage):
+    chunk_id: str
+    file_size: int
+
+    TYPE = WSMessageType.CORRECT_FILE_SIZE
+
+    def encode(self) -> bytes:
+        buf = BytesIO()
+        write_u8(buf, self.TYPE)
+        write_string(buf, self.chunk_id)
+        write_u64(buf, self.file_size)
+        return buf.getvalue()
+
+    @classmethod
+    def decode(cls, buf: BytesIO) -> "CorrectFileSizeMessage":
+        return cls(chunk_id=read_string(buf), file_size=read_u64(buf))
+
+
+@dataclass
 class RegisterResponseMessage(WSMessage):
     worker_id: str
 
@@ -180,7 +197,7 @@ class RegisterResponseMessage(WSMessage):
 @dataclass
 class ChunkInfo:
     chunk_id: str
-    file_id: str
+    file_size: int
     url: str
     start: int
     end: int
@@ -225,7 +242,7 @@ class ChunkResponseMessage(WSMessage):
         write_u32(buf, len(self.chunks))
         for chunk in self.chunks:
             write_string(buf, chunk.chunk_id)
-            write_string(buf, chunk.file_id)
+            write_u64(buf, chunk.file_size)
             write_string(buf, chunk.url)
             write_u64(buf, chunk.start)
             write_u64(buf, chunk.end)
@@ -237,11 +254,11 @@ class ChunkResponseMessage(WSMessage):
         chunks = []
         for _ in range(count):
             chunk_id = read_string(buf)
-            file_id = read_string(buf)
+            file_size = read_u64(buf)
             url = ChunkInfo.normalize_url(read_string(buf))
             start = read_u64(buf)
             end = read_u64(buf)
-            chunks.append(ChunkInfo(chunk_id, file_id, url, start, end))
+            chunks.append(ChunkInfo(chunk_id, file_size, url, start, end))
         return cls(chunks=chunks)
 
 

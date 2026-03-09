@@ -128,9 +128,9 @@ async def worker_loop(
         jobs_queued = 0
         for job in jobs:
             async with active_job_ids_lock:
-                if job.file_id in active_job_ids:
+                if job.chunk_id in active_job_ids:
                     continue
-                active_job_ids.add(job.file_id)
+                active_job_ids.add(job.chunk_id)
 
             size = job.end - job.start
             if size:
@@ -264,12 +264,12 @@ async def worker_loop(
                     jobs_success += 1
                 except Exception as e:
                     jobs_fail += 1
-                    log.error("[worker] Error processing job %s: %s", job.file_id, e)
+                    log.error("[worker] Error processing job %s: %s", job.chunk_id, e)
                     await asyncio.sleep(RETRY_DELAY)
                     continue
                 finally:
                     async with active_job_ids_lock:
-                        active_job_ids.discard(job.file_id)
+                        active_job_ids.discard(job.chunk_id)
                     job_queue[worker_id].task_done()
         except websockets.exceptions.WebSocketException:
             log.error("[worker] Worker loop %s had a WebSocket error, exiting...", worker_id)
